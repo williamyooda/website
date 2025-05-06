@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ARC Validator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button { padding: 8px; font-size: 16px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>ARC Number Validator</h2>
+  <label for="arcNumber">Enter ARC Number:</label>
+  <input type="text" id="arcNumber" maxlength="10" placeholder="A123456789">
+  <button onclick="validateARC()">Validate</button>
+  <p id="result"></p>
+
+  <script>
+    function validateARC() {
+      const a = [10,11,12,13,14,15,16,17,34,18,19,20,21,22,35,23,24,25,26,27,28,29,32,30,31,33];
+      const input = document.getElementById("arcNumber").value.toUpperCase();
+      const result = document.getElementById("result");
+
+      if (!/^[A-Z][0-9]{9}$/.test(input)) {
+        result.textContent = "Invalid format. Must be one letter followed by 9 digits.";
+        result.style.color = "red";
+        return;
+      }
+
+      const fronnum = a[input.charCodeAt(0) - 65];
+      const f11 = Math.floor(fronnum / 10) * 1;
+      const f12 = (fronnum % 10) * 9;
+      let total = f11 + f12;
+
+      let k = 8;
+      for (let i = 1; i <= 8; i++) {
+        total += parseInt(input[i], 10) * k;
+        k--;
+      }
+
+      const checkDigit = parseInt(input[9], 10);
+      total = (10 - (total % 10)) % 10;
+
+      if (total === checkDigit) {
+        result.textContent = "Valid ARC number";
+        result.style.color = "green";
+      } else {
+        result.textContent = "Not a valid ARC number";
+        result.style.color = "red";
+      }
+    }
+  </script>
+</body>
+<footer><a href="myproj.html">BACK TO PROJECT</a></footer>
+</html>
