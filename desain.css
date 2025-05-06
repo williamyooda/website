@@ -79,6 +79,12 @@ font-size: 3vw;
     display: none;
 }
 
+.project {
+    padding-top: 120px;
+    color : black;
+}
+
+
 @media screen and (max-width: 600px) { 
     .topnav a:not(:first-child) {
         display: none;
