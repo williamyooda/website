@@ -1,16 +1,114 @@
 <html>
 <head>
-<title>HAPPY MOTHERS DAY</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <title>HAPPY MOTHERS DAY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #darkOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 9998;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    #darkOverlay.show {
+      display: block;
+      opacity: 1;
+    }
+
+    #messageBox {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      background-color: white;
+      color: black;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+      display: none;
+      font-family: 'Merriweather', serif;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    #messageBox.show {
+      display: block;
+      opacity: 1;
+    }
+
+    #messageBox img {
+      width: 80px;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body class="body">
-   <div class="wrapper">
+  <div class="wrapper">
     <div class="boxs">
-        <a class="titletex">母親節快樂</a> 
-   </div></div> 
-   </body>
+      <a class="titletex">母親節快樂</a>
+      <div class="minitex">selamat hari ibu</div>
 
+      <div class="giftbor">
+        <img src="/image/tutup.png" id="giftImage" class="fitio" alt="Click Me" onclick="changeImage()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div id="darkOverlay" onclick="closeOverlay()"></div>
+
+  <!-- Message Box -->
+  <div id="messageBox">
+    <p>I love you Mom. Thank you for your kindness, your strength, and your endless love. 💖</p>
+    <img src="/image/mami.jpeg" class="mami" alt="Flower" />
+  </div>
+
+  <!-- Optional background music -->
+  <audio id="bgMusic" src="/audio/mothers_day_song.mp3" preload="auto"></audio>
+
+  <script>
+    function changeImage() {
+      const img = document.getElementById("giftImage");
+      const overlay = document.getElementById("darkOverlay");
+      const messageBox = document.getElementById("messageBox");
+      const music = document.getElementById("bgMusic");
+
+      if (img.src.includes("tutup.png")) {
+        img.src = "/image/buka.png";
+
+        setTimeout(() => {
+          overlay.classList.add("show");
+          messageBox.classList.add("show");
+
+          // Start music
+          music.currentTime = 0;
+          music.play();
+        }, 100);
+      } else {
+        closeOverlay();
+      }
+    }
+
+    function closeOverlay() {
+      document.getElementById("darkOverlay").classList.remove("show");
+      document.getElementById("messageBox").classList.remove("show");
+      document.getElementById("giftImage").src = "/image/tutup.png";
+      
+      // Pause music
+      document.getElementById("bgMusic").pause();
+    }
+  </script>
+</body>
+<footer class="footer">create by 游昱勳 4B2YY009 </footer>
 </html>
