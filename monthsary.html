@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Monthversary</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="" crossorigin="anonymous">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base page theme & responsive container */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 30%, #3b0724 0%, #200414 55%, #0f0108 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-cursive {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-handwriting {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Glassmorphism card container styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65);
+        }
+
+        .glass-card-sm {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Initial Pulsing Glow for Reveal Button */
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.75); }
+            70% { transform: scale(1.06); box-shadow: 0 0 0 28px rgba(244, 114, 182, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 114, 182, 0); }
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 2.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        /* Pop in entrance animation */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.3) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .pop-in {
+            animation: popIn 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Circular Orbit Stage */
+        #circleStage {
+            position: relative;
+            width: 100%;
+            height: 560px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 640px) {
+            #circleStage {
+                height: 480px;
+            }
+        }
+
+        /* Orbit Ring Rotation */
+        @keyframes orbitRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .orbit-ring {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            animation: orbitRotate 60s linear infinite;
+        }
+
+        .orbit-ring.paused {
+            animation-play-state: paused;
+        }
+
+        /* Polaroid Photo Cards */
+        .polaroid-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 105px;
+            background: #ffffff;
+            padding: 6px 6px 14px 6px;
+            border-radius: 10px;
+            box-shadow: 0 14px 35px rgba(0,0,0,0.6), 0 0 18px rgba(244, 114, 182, 0.3);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, opacity 0.5s ease;
+            cursor: pointer;
+            z-index: 20;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: auto;
+        }
+
+        @media (min-width: 768px) {
+            .polaroid-item {
+                width: 130px;
+                padding: 8px 8px 18px 8px;
+            }
+        }
+
+        .polaroid-item.active {
+            opacity: 1;
+            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot));
+            animation: floatBob 4.5s ease-in-out infinite alternate;
+            animation-delay: var(--anim-delay, 0s);
+        }
+
+        @keyframes floatBob {
+            0% {
+                transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot)) translateY(0px);
+            }
+            100% {
+                transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(calc(var(--rot) + 6deg)) translateY(-10px);
+            }
+        }
+
+        .polaroid-item:hover {
+            z-index: 50 !important;
+            box-shadow: 0 22px 45px rgba(244, 114, 182, 0.85), 0 0 30px rgba(251, 191, 36, 0.7);
+            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.28) rotate(0deg) !important;
+        }
+
+        /* Drag & Drop Overlay Zone */
+        .dropzone-active {
+            border-color: #f472b6 !important;
+            background: rgba(244, 114, 182, 0.15) !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(244, 114, 182, 0.5);
+            border-radius: 999px;
+        }
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen text-slate-100 flex flex-col items-center justify-between p-4 md:p-6 select-none">
+
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Header Section -->
+    <header class="relative z-10 text-center pt-3 pb-2">
+        <h1 class="text-4xl md:text-6xl font-extrabold font-cursive bg-clip-text text-transparent bg-gradient-to-r from-rose-300 via-pink-200 to-amber-200 tracking-wide drop-shadow-md">
+            Happy Monthversary
+        </h1>
+        
+    </header>
+
+    <main class="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center justify-center my-auto">
+
+        <!-- Celebration Banner (Revealed on click) -->
+        <div id="celebrationBanner" class="hidden text-center space-y-2 mb-2 w-full max-w-2xl pop-in">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border border-rose-400/40 text-amber-200 text-xs font-semibold tracking-wider uppercase shadow-lg">
+                <i class="fa-solid fa-sparkles text-amber-300"></i>
+                <span>Our Special Monthversary</span>
+                <i class="fa-solid fa-sparkles text-amber-300"></i>
+            </div>
+           
+        </div>
+
+        <!-- CIRCULAR STAGE: Central Button / Transformed MP3 Player & Orbit Ring -->
+        <div id="circleStage">
+
+            <!-- 1. INITIAL CLICK HERE BUTTON -->
+            <div id="initialBtnBox" class="z-30 transition-all duration-500">
+                <button id="clickHereBtn" onclick="revealCelebration(event)" 
+                        class="animate-pulse-glow px-9 py-5 md:px-12 md:py-6 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-xl md:text-2xl shadow-2xl flex items-center gap-3 transform hover:scale-105 transition-all cursor-pointer border-2 border-white/40">
+                    <i class="fa-solid fa-heart text-amber-200 animate-bounce"></i>
+                    <span>Click Here ❤️</span>
+                </button>
+            </div>
+
+            <!-- 2. TRANSFORMED CENTRAL CUSTOM MP3 PLAYER -->
+            <div id="centerMusicPlayer" class="hidden z-30 w-[310px] sm:w-[350px] md:w-[380px] glass-card rounded-3xl p-5 border border-white/20 shadow-2xl pop-in text-center my-auto">
+                
+                <!-- Track Info & Visualizer Canvas -->
+                <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-3 gap-2">
+                    <div class="flex items-center gap-3 text-left truncate flex-1">
+                        <div id="albumArtBadge" class="w-11 h-11 rounded-2xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-center text-rose-300 shrink-0 shadow-inner">
+                            <i class="fa-solid fa-compact-disc text-xl animate-spin" style="animation-duration: 8s;" id="discIcon"></i>
+                        </div>
+                        <div class="truncate">
+                            <h3 class="text-xs md:text-sm font-bold text-white leading-tight truncate" id="playerTrackTitle">No Audio File Loaded</h3>
+                            <p class="text-[10px] text-pink-300/80 font-medium truncate mt-0.5" id="playerArtist">SunKissed Lola • Ikaw at Ikaw</p>
+                        </div>
+                    </div>
+
+                    <!-- Spectrum Visualizer Canvas -->
+                    <div class="w-20 h-8 rounded-lg bg-black/40 border border-white/10 p-1 flex items-center justify-center shrink-0">
+                        <canvas id="visualizerCanvas" width="80" height="32" class="w-full h-full rounded"></canvas>
+                    </div>
+                </div>
+
+                <!-- Quick Jump Climax Button -->
+                <button onclick="jumpToClimax()" class="w-full mb-3 py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500/30 via-rose-500/40 to-amber-500/30 hover:from-amber-500/50 hover:to-rose-500/50 border border-amber-400/40 text-amber-200 text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-95">
+                    <i class="fa-solid fa-fire text-amber-300 animate-pulse"></i>
+                    <span>Start at 4:05 (Climax Reff) 🔥</span>
+                </button>
+
+                <!-- MP3 Dropzone & File Select Area -->
+                <label for="mp3FileInput" class="sr-only">Choose an audio file</label>
+                <input type="file" id="mp3FileInput" accept="audio/*" class="hidden" aria-label="Choose an audio file" onchange="handleMp3Upload(event)">
+                
+
+                <!-- Seek / Dynamic Progress Bar -->
+                <div class="space-y-1 mb-3">
+                    <label for="audioSeekBar" class="sr-only">Seek through the audio</label>
+                    <input type="range" id="audioSeekBar" min="0" max="100" value="0" step="0.1" 
+                           class="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-rose-400 focus:outline-none" aria-label="Seek through the audio">
+                    <div class="flex justify-between text-[10px] text-slate-300 font-mono px-0.5">
+                        <span id="currentTimeDisplay">04:05</span>
+                        <span id="durationDisplay">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Full Audio Controls Bar -->
+                <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/10">
+                    
+                    <!-- Loop Toggle -->
+                    <button id="loopBtn" onclick="toggleAudioLoop()" title="Toggle Loop" 
+                            class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-repeat"></i>
+                    </button>
+
+                    <!-- Volume & Mute Controls -->
+                    <div class="flex items-center gap-1.5 glass-card-sm px-2.5 py-1 rounded-xl">
+                        <button id="muteBtn" onclick="toggleMute()" class="text-slate-300 hover:text-white text-xs" aria-label="Toggle mute">
+                            <i class="fa-solid fa-volume-high" id="muteIcon" aria-hidden="true"></i>
+                        </button>
+                        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="0.55" 
+                               class="w-12 sm:w-16 h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-rose-400"
+                               aria-label="Volume">
+                    </div>
+
+                    <!-- Main Play / Pause Button -->
+                    <button id="mainPlayBtn" onclick="toggleAudioPlayback()" 
+                            class="w-12 h-12 rounded-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white text-lg flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all">
+                        <i class="fa-solid fa-play ml-0.5" id="playIcon"></i>
+                    </button>
+
+                    <!-- Particle Sparkle Burst Button -->
+                    <button onclick="triggerParticleBurst(event)" title="Trigger Sparkle Burst" 
+                            class="w-8 h-8 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 text-xs flex items-center justify-center transition-all border border-amber-400/30">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- 3. ORBITING CIRCULAR PHOTO RING -->
+            <div id="photoRing" class="orbit-ring">
+                <!-- 8 Polaroid cards rendered dynamically via JS -->
+            </div>
+
+        </div>
+
+        <!-- Action Bar at Bottom -->
+        <div id="bottomToolbar" class="hidden mt-4 z-30 flex flex-wrap items-center justify-center gap-3">
+            
+            
+            <button onclick="document.getElementById('mp3FileInput').click()" class="px-4 py-2 rounded-full glass-card hover:bg-white/20 text-rose-200 border border-rose-400/30 text-xs font-semibold flex items-center gap-2 shadow-lg transition-all">
+                <i class="fa-solid fa-file-audio text-amber-300"></i>
+              
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center py-2 text-xs text-slate-400">
+        Happy Monthversary  💕
+    </footer>
+
+    <!-- MODAL 1: Lightbox & Quick Photo Replacer -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-lg w-full glass-card rounded-3xl p-5 border border-white/20 text-center space-y-4 shadow-2xl">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 text-slate-300 hover:text-white text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <h3 class="text-xs font-bold text-amber-200 uppercase tracking-wider flex items-center justify-center gap-2">
+                <i class="fa-solid fa-camera"></i> Memory Preview
+            </h3>
+
+            <!-- Polaroid Card Frame -->
+            <div class="p-3 bg-white rounded-2xl shadow-2xl inline-block max-w-full text-left">
+                <div class="overflow-hidden rounded-xl max-h-[50vh] bg-slate-100 flex items-center justify-center">
+                    <img id="lightboxImg" src="" alt="Memory" class="max-h-[50vh] w-auto mx-auto rounded-lg object-contain">
+                </div>
+                
+                <!-- Editable Caption Field -->
+                <div class="mt-3 px-1">
+                    <label for="lightboxCaptionInput" class="block text-[10px] text-slate-400 font-sans uppercase font-bold tracking-wider mb-1">Caption</label>
+                    <input type="text" id="lightboxCaptionInput" onchange="saveLightboxCaptionChange()" 
+                           placeholder="Type a caption..." 
+                           class="w-full text-slate-800 font-handwriting text-2xl font-bold bg-transparent border-b border-dashed border-slate-300 focus:border-rose-400 focus:outline-none pb-1">
+                </div>
+            </div>
+
+            <!-- Replace Photo Options -->
+            <div class="pt-2 border-t border-white/10 flex flex-col gap-2 text-xs">
+                <label for="lightboxFileInput" class="font-semibold text-rose-200 text-left">Replace This Photo:</label>
+                <div class="flex gap-2">
+                    <input type="file" id="lightboxFileInput" accept="image/*" class="hidden" aria-label="Upload replacement image" onchange="handleLightboxFileReplace(event)">
+                    <label for="lightboxFileInput" class="flex-1 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-400/30 font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-upload"></i> Upload Image
+                    </label>
+                    <button onclick="promptChangePhotoUrl()" class="flex-1 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/30 font-semibold transition-all flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-link"></i> Web Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Photo Ring Manager Modal -->
+    <div id="managePhotosModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="relative w-full max-w-lg glass-card text-slate-100 rounded-3xl p-6 shadow-2xl space-y-4 border border-white/20 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-rose-400"></i> Customize Photo Ring
+                </h3>
+                <button onclick="closeManagePhotosModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Add New Photo Form -->
+            <div class="p-3 bg-white/5 rounded-2xl border border-white/10 space-y-2 text-xs">
+                <h4 class="font-semibold text-amber-200">Add New Photo to Circle</h4>
+                <div class="space-y-2">
+                    <label for="newPhotoFileInput" class="block text-[10px] font-medium uppercase tracking-wide text-slate-300">Choose photo</label>
+                    <input type="file" id="newPhotoFileInput" accept="image/*" class="w-full text-xs text-slate-300 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-rose-500/20 file:text-rose-200 hover:file:bg-rose-500/30">
+                    <label for="newPhotoUrlInput" class="block text-[10px] font-medium uppercase tracking-wide text-slate-300">Photo URL</label>
+                    <input type="text" id="newPhotoUrlInput" placeholder="Or paste image URL (https://...)" class="w-full px-3 py-1.5 rounded-xl bg-slate-900/80 border border-white/20 text-white text-xs focus:outline-none focus:border-rose-400">
+                    <label for="newPhotoCaptionInput" class="block text-[10px] font-medium uppercase tracking-wide text-slate-300">Photo Caption</label>
+                    <input type="text" id="newPhotoCaptionInput" placeholder="Polaroid Caption (e.g., Ikaw at Ikaw ❤️)" class="w-full px-3 py-1.5 rounded-xl bg-slate-900/80 border border-white/20 text-white text-xs focus:outline-none focus:border-rose-400">
+                </div>
+                <button onclick="addNewPhotoToRing()" class="w-full py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-xs shadow-md transition-all">
+                    Add Photo
+                </button>
+            </div>
+
+            <!-- Existing Photos List -->
+            <div class="space-y-2">
+                <h4 class="text-xs font-semibold text-slate-300">Current Photos in Ring (<span id="photoCountDisplay">8</span>)</h4>
+                <div id="photosListContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    <!-- Dynamic list items -->
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-2 border-t border-white/10">
+                <button onclick="resetDefaultPhotos()" class="text-[11px] text-rose-300 hover:underline">Reset Default Photos</button>
+                <button onclick="closeManagePhotosModal()" class="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State Management
+        // 1. Define the missing default photos array
+const defaultPhotos = [
+    { id: 1, url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=300&q=80', caption: 'Ikaw at Ikaw ❤️' },
+    { id: 2, url: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=300&q=80', caption: 'Sweet Memories' },
+    { id: 3, url: 'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=300&q=80', caption: 'Always' },
+    { id: 4, url: 'https://images.unsplash.com/photo-1506744626753-1fa30fd8cb28?auto=format&fit=crop&w=300&q=80', caption: 'Forever' },
+    { id: 5, url: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=300&q=80', caption: 'Together' },
+    { id: 6, url: 'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=300&q=80', caption: 'My Love' }
+];
+
+// 2. Add the missing render function for the photo circle
+function renderPhotoCircle() {
+    const ring = document.getElementById('photoRing');
+    ring.innerHTML = '';
+    
+    state.photos.forEach((photo, index) => {
+        const item = document.createElement('div');
+        item.className = 'polaroid-item active'; 
+        item.onclick = () => openLightbox(index);
+        
+        item.innerHTML = `
+            <div class="overflow-hidden rounded-md bg-slate-100 aspect-square flex items-center justify-center">
+                <img src="${photo.url}" alt="Memory" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=300&q=80'">
+            </div>
+            <p class="mt-2 text-center text-slate-800 font-handwriting text-lg leading-tight truncate px-1">${photo.caption}</p>
+        `;
+        ring.appendChild(item);
+    });
+    
+    positionPhotosInCircle();
+}
+
+// 3. Add the missing function to calculate circular positions
+function positionPhotosInCircle() {
+    const items = document.querySelectorAll('.polaroid-item');
+    if (items.length === 0) return;
+    
+    // Adjust radius for mobile vs desktop so it orbits around the center player
+    const isMobile = window.innerWidth < 768;
+    const radiusX = isMobile ? 150 : 250; 
+    const radiusY = isMobile ? 180 : 260;
+    
+    const angleStep = (Math.PI * 2) / items.length;
+    
+    items.forEach((item, i) => {
+        const angle = i * angleStep;
+        const tx = Math.cos(angle) * radiusX;
+        const ty = Math.sin(angle) * radiusY;
+        
+        // Randomize slight rotation for polaroid effect
+        const baseRot = (Math.random() - 0.5) * 20; 
+        const animDelay = (Math.random() * 2) + 's';
+        
+        item.style.setProperty('--tx', `${tx}px`);
+        item.style.setProperty('--ty', `${ty}px`);
+        item.style.setProperty('--rot', `${baseRot}deg`);
+        item.style.setProperty('--anim-delay', animDelay);
+    });
+}
+
+// 4. Add the missing play/pause toggle for the orbit rotation
+function toggleOrbitRotation() {
+    state.isRotating = !state.isRotating;
+    const ring = document.getElementById('photoRing');
+    const btnText = document.getElementById('orbitBtnText');
+    const btnIcon = document.getElementById('orbitToggleBtn').querySelector('i');
+    
+    if (state.isRotating) {
+        ring.classList.remove('paused');
+        btnText.textContent = 'Pause Rotation';
+        btnIcon.className = 'fa-solid fa-rotate text-amber-300';
+    } else {
+        ring.classList.add('paused');
+        btnText.textContent = 'Resume Rotation';
+        btnIcon.className = 'fa-solid fa-play text-amber-300';
+    }
+}
+        const state = {
+            revealed: false,
+            isPlayingAudio: false,
+            audioElement: null,
+            audioCtx: null,
+            analyser: null,
+            sourceNode: null,
+            dataArray: null,
+            isLooping: false,
+            isMuted: false,
+            lastVolume: 0.50,
+            defaultStartTime: 245, // 4 minutes 5 seconds (245 seconds climax)
+            photos: JSON.parse(localStorage.getItem('ikaw_at_ikaw_photos')) || defaultPhotos,
+            isRotating: true,
+            activeLightboxIndex: null
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initBackgroundCanvas();
+            initVisualizerCanvas();
+            setupAudioPlayer();
+
+            window.addEventListener('resize', () => {
+                if (state.revealed) {
+                    positionPhotosInCircle();
+                }
+            });
+        });
+
+        // Click Reveal Handler
+        function revealCelebration(e) {
+            state.revealed = true;
+
+            if (!state.audioElement || !state.audioElement.src) {
+                document.getElementById('mp3FileInput').click();
+            }
+
+            // Trigger Heart Particle Burst
+            triggerParticleBurst(e);
+
+            // Hide initial button box with smooth scale-down
+            const initialBox = document.getElementById('initialBtnBox');
+            initialBox.classList.add('opacity-0', 'scale-50');
+
+            setTimeout(() => {
+                initialBox.classList.add('hidden');
+
+                // Reveal Celebration Banner
+                document.getElementById('celebrationBanner').classList.remove('hidden');
+
+                // Reveal Central MP3 Player Widget
+                document.getElementById('centerMusicPlayer').classList.remove('hidden');
+
+                // Reveal Bottom Control Bar
+                document.getElementById('bottomToolbar').classList.remove('hidden');
+
+                // Render Polaroid Ring Photos
+                renderPhotoCircle();
+
+                // Automatically start playing at 4:05 if audio source is already present
+                if (state.audioElement && state.audioElement.src) {
+                    jumpToClimax();
+                    startAudioPlayback();
+                }
+            }, 350);
+        }
+
+        // Jump audio playback directly to 4:05 (245 seconds)
+        function jumpToClimax() {
+            if (state.audioElement && state.audioElement.src) {
+                const targetTime = state.defaultStartTime;
+                if (state.audioElement.duration && state.audioElement.duration > targetTime) {
+                    state.audioElement.currentTime = targetTime;
+                } else if (state.audioElement.duration) {
+                    state.audioElement.currentTime = 0;
+                } else {
+                    state.audioElement.currentTime = targetTime;
+                }
+                startAudioPlayback();
+                triggerParticleBurst({ clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 });
+            } else {
+                document.getElementById('mp3FileInput').click();
+            }
+        }
+
+        function formatTime(secs) {
+            if (isNaN(secs)) return '00:00';
+            const m = Math.floor(secs / 60) || 0;
+            const s = Math.floor(secs % 60) || 0;
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function loadAudioFile(file) {
+            const audioUrl = URL.createObjectURL(file);
+            state.audioElement.src = audioUrl;
+
+            // Update UI displays
+            const cleanName = file.name.replace(/\.[^/.]+$/, "");
+            document.getElementById('playerTrackTitle').textContent = cleanName;
+            document.getElementById('playerArtist').textContent = "SunKissed Lola • Ikaw at Ikaw";
+            document.getElementById('uploadStatusText').textContent = `Loaded: ${file.name.substring(0, 24)}...`;
+
+            // Auto-jump to 4:05 climax when audio metadata is ready
+            const onMetadataLoaded = () => {
+                jumpToClimax();
+            };
+
+            if (state.audioElement.readyState >= 1) {
+                onMetadataLoaded();
+            } else {
+                state.audioElement.addEventListener('loadedmetadata', onMetadataLoaded, { once: true });
+            }
+        }
+
+        function initBackgroundCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            for (let i = 0; i < 45; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 8 + 4,
+                    speedY: Math.random() * 0.6 + 0.25,
+                    speedX: (Math.random() - 0.5) * 0.35,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            function drawHeart(x, y, size, color) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.translate(x, y);
+                const topCurve = size * 0.3;
+                ctx.moveTo(0, topCurve);
+                ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurve);
+                ctx.bezierCurveTo(-size / 2, (size + topCurve) / 2, 0, size, 0, size);
+                ctx.bezierCurveTo(0, size, size / 2, (size + topCurve) / 2, size / 2, topCurve);
+                ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurve);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.y -= p.speedY;
+                    p.x += p.speedX;
+
+                    if (p.y < -20) {
+                        p.y = height + 20;
+                        p.x = Math.random() * width;
+                    }
+
+                    drawHeart(p.x, p.y, p.size, `rgba(244, 114, 182, ${p.opacity})`);
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        function triggerParticleBurst(e) {
+            const originX = e && e.clientX ? e.clientX : window.innerWidth / 2;
+            const originY = e && e.clientY ? e.clientY : window.innerHeight / 2;
+
+            for (let i = 0; i < 35; i++) {
+                const el = document.createElement('div');
+                el.className = 'fixed text-xl pointer-events-none z-50 transition-all duration-1000 ease-out';
+                el.innerHTML = ['❤️', '💖', '✨', '💕', '🌸', '💛', '🎶'][Math.floor(Math.random() * 7)];
+                el.style.left = `${originX}px`;
+                el.style.top = `${originY}px`;
+                document.body.appendChild(el);
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 180 + 40;
+                const destX = originX + Math.cos(angle) * dist;
+                const destY = originY + Math.sin(angle) * dist - 30;
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${destX - originX}px, ${destY - originY}px) scale(1.4)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1050);
+            }
+        }
+
+        function setupAudioPlayer() {
+            state.audioElement = new Audio();
+
+            state.audioElement.src = 'song.mp3';
+
+            // Audio player event listeners
+            state.audioElement.addEventListener('timeupdate', () => {
+                const cur = state.audioElement.currentTime || 0;
+                const dur = state.audioElement.duration || 0;
+                
+                if (dur > 0) {
+                    document.getElementById('audioSeekBar').value = (cur / dur) * 100;
+                }
+                
+                document.getElementById('currentTimeDisplay').textContent = formatTime(cur);
+                document.getElementById('durationDisplay').textContent = formatTime(dur);
+            });
+
+            state.audioElement.addEventListener('ended', () => {
+                if (!state.isLooping) {
+                    stopAudioPlayback();
+                }
+            });
+
+            // Seek slider listener
+            document.getElementById('audioSeekBar').addEventListener('input', (e) => {
+                if (state.audioElement.duration) {
+                    state.audioElement.currentTime = (e.target.value / 100) * state.audioElement.duration;
+                }
+            });
+
+            // Volume listener
+            document.getElementById('volumeControl').addEventListener('input', (e) => {
+                const vol = parseFloat(e.target.value);
+                state.audioElement.volume = vol;
+                state.lastVolume = vol;
+
+                const muteIcon = document.getElementById('muteIcon');
+                if (vol === 0) {
+                    state.isMuted = true;
+                    muteIcon.className = 'fa-solid fa-volume-xmark text-rose-400';
+                } else {
+                    state.isMuted = false;
+                    muteIcon.className = 'fa-solid fa-volume-high';
+                }
+            });
+        }
+
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60) || 0;
+            const s = Math.floor(secs % 60) || 0;
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // Drag & Drop Handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('audioDropZone').classList.add('dropzone-active');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('audioDropZone').classList.remove('dropzone-active');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('audioDropZone').classList.remove('dropzone-active');
+
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0 && files[0].type.startsWith('audio/')) {
+                loadAudioFile(files[0]);
+            }
+        }
+
+        function handleMp3Upload(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                loadAudioFile(files[0]);
+            }
+        }
+
+        function loadAudioFile(file) {
+            const audioUrl = URL.createObjectURL(file);
+            state.audioElement.src = audioUrl;
+
+            // Update UI displays
+            const cleanName = file.name.replace(/\.[^/.]+$/, "");
+            document.getElementById('playerTrackTitle').textContent = cleanName;
+            document.getElementById('playerArtist').textContent = "User Uploaded Song";
+            document.getElementById('uploadStatusText').textContent = `Loaded: ${file.name.substring(0, 24)}...`;
+
+            // Start Playback
+            startAudioPlayback();
+        }
+
+        function toggleAudioPlayback() {
+            if (!state.audioElement.src) {
+                document.getElementById('mp3FileInput').click();
+                return;
+            }
+
+            if (state.isPlayingAudio) {
+                stopAudioPlayback();
+            } else {
+                startAudioPlayback();
+            }
+        }
+
+        function startAudioPlayback() {
+            if (!state.audioElement.src) return;
+
+            // Connect Web Audio API Analyser Node on first play
+            setupAudioAnalyser();
+
+            state.audioElement.play().then(() => {
+                state.isPlayingAudio = true;
+                document.getElementById('playIcon').className = 'fa-solid fa-pause';
+                document.getElementById('discIcon').classList.add('animate-spin');
+                if (state.audioCtx && state.audioCtx.state === 'suspended') {
+                    state.audioCtx.resume();
+                }
+            }).catch(err => {
+                console.error("Playback error:", err);
+            });
+        }
+
+        function stopAudioPlayback() {
+            state.isPlayingAudio = false;
+            state.audioElement.pause();
+            document.getElementById('playIcon').className = 'fa-solid fa-play ml-0.5';
+            document.getElementById('discIcon').classList.remove('animate-spin');
+        }
+
+        function toggleAudioLoop() {
+            state.isLooping = !state.isLooping;
+            state.audioElement.loop = state.isLooping;
+            const loopBtn = document.getElementById('loopBtn');
+
+            if (state.isLooping) {
+                loopBtn.classList.add('bg-rose-500/40', 'text-amber-300', 'border', 'border-rose-400/50');
+            } else {
+                loopBtn.classList.remove('bg-rose-500/40', 'text-amber-300', 'border', 'border-rose-400/50');
+            }
+        }
+
+        function toggleMute() {
+            state.isMuted = !state.isMuted;
+            const muteIcon = document.getElementById('muteIcon');
+            const volControl = document.getElementById('volumeControl');
+
+            if (state.isMuted) {
+                state.audioElement.volume = 0;
+                volControl.value = 0;
+                muteIcon.className = 'fa-solid fa-volume-xmark text-rose-400';
+            } else {
+                state.audioElement.volume = state.lastVolume || 0.50;
+                volControl.value = state.lastVolume || 0.5;
+                muteIcon.className = 'fa-solid fa-volume-high';
+            }
+        }
+
+        function setupAudioAnalyser() {
+            if (state.analyser) return;
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                state.audioCtx = new AudioContext();
+                state.analyser = state.audioCtx.createAnalyser();
+                state.analyser.fftSize = 64;
+
+                state.sourceNode = state.audioCtx.createMediaElementSource(state.audioElement);
+                state.sourceNode.connect(state.analyser);
+                state.analyser.connect(state.audioCtx.destination);
+
+                const bufferLength = state.analyser.frequencyBinCount;
+                state.dataArray = new Uint8Array(bufferLength);
+            } catch (e) {
+                console.warn("Web Audio API spectrum context setup error:", e);
+            }
+        }
+
+        function initVisualizerCanvas() {
+            const canvas = document.getElementById('visualizerCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function drawVisualizer() {
+                requestAnimationFrame(drawVisualizer);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const barWidth = 6;
+                const gap = 3;
+                const barCount = 7;
+                const startX = (canvas.width - (barCount * (barWidth + gap))) / 2;
+
+                if (state.isPlayingAudio && state.analyser && state.dataArray) {
+                    state.analyser.getByteFrequencyData(state.dataArray);
+                }
+
+                for (let i = 0; i < barCount; i++) {
+                    let barHeight = 4;
+
+                    if (state.isPlayingAudio) {
+                        if (state.dataArray && state.dataArray[i * 2]) {
+                            barHeight = Math.max(4, (state.dataArray[i * 2] / 255) * canvas.height * 0.9);
+                        } else {
+                            barHeight = Math.max(4, Math.sin(Date.now() * 0.008 + i) * 12 + 14);
+                        }
+                    }
+
+                    const x = startX + i * (barWidth + gap);
+                    const y = canvas.height - barHeight;
+
+                    const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+                    gradient.addColorStop(0, '#f472b6');
+                    gradient.addColorStop(1, '#fbbf24');
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, barWidth, barHeight, 2);
+                    ctx.fill();
+                }
+            }
+
+            drawVisualizer();
+        }
+
+        function openLightbox(index) {
+            state.activeLightboxIndex = index;
+            const photo = state.photos[index];
+            if (!photo) return;
+
+            document.getElementById('lightboxImg').src = photo.url;
+            document.getElementById('lightboxCaptionInput').value = photo.caption;
+
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+            state.activeLightboxIndex = null;
+        }
+
+        function saveLightboxCaptionChange() {
+            if (state.activeLightboxIndex === null) return;
+            const newCaption = document.getElementById('lightboxCaptionInput').value.trim();
+            state.photos[state.activeLightboxIndex].caption = newCaption || 'Ikaw at Ikaw ❤️';
+            savePhotosToStorage();
+            renderPhotoCircle();
+        }
+
+        function handleLightboxFileReplace(e) {
+            const file = e.target.files[0];
+            if (file && state.activeLightboxIndex !== null) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    state.photos[state.activeLightboxIndex].url = evt.target.result;
+                    savePhotosToStorage();
+                    renderPhotoCircle();
+                    openLightbox(state.activeLightboxIndex);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function promptChangePhotoUrl() {
+            if (state.activeLightboxIndex === null) return;
+            const newUrl = prompt("Enter Image Web Link (URL):", state.photos[state.activeLightboxIndex].url);
+            if (newUrl && newUrl.trim()) {
+                state.photos[state.activeLightboxIndex].url = newUrl.trim();
+                savePhotosToStorage();
+                renderPhotoCircle();
+                openLightbox(state.activeLightboxIndex);
+            }
+        }
+
+        function openManagePhotosModal() {
+            renderPhotosList();
+            document.getElementById('managePhotosModal').classList.remove('hidden');
+        }
+
+        function closeManagePhotosModal() {
+            document.getElementById('managePhotosModal').classList.add('hidden');
+        }
+
+        function renderPhotosList() {
+            const container = document.getElementById('photosListContainer');
+            container.innerHTML = '';
+            document.getElementById('photoCountDisplay').textContent = state.photos.length;
+
+            state.photos.forEach((photo, idx) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/10 text-xs gap-2';
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-2 truncate flex-1">
+                        <img src="${photo.url}" class="w-8 h-8 rounded-lg object-cover shrink-0" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80'">
+                        <input type="text" value="${photo.caption}" onchange="updatePhotoCaptionFromList(${idx}, this.value)" 
+                               class="bg-transparent border-b border-transparent hover:border-white/20 focus:border-rose-400 focus:outline-none text-slate-200 text-xs font-medium truncate w-full">
+                    </div>
+                    <button onclick="removePhotoFromRing(${idx})" class="text-rose-400 hover:text-rose-300 p-1">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                `;
+
+                container.appendChild(row);
+            });
+        }
+
+        function updatePhotoCaptionFromList(index, val) {
+            state.photos[index].caption = val.trim() || 'Ikaw at Ikaw ❤️';
+            savePhotosToStorage();
+            renderPhotoCircle();
+        }
+
+        function addNewPhotoToRing() {
+            const fileInput = document.getElementById('newPhotoFileInput');
+            const urlInput = document.getElementById('newPhotoUrlInput').value.trim();
+            const captionInput = document.getElementById('newPhotoCaptionInput').value.trim() || 'Happy Monthversary! ❤️';
+
+            const addPhoto = (url) => {
+                state.photos.unshift({
+                    id: Date.now(),
+                    url: url,
+                    caption: captionInput
+                });
+
+                savePhotosToStorage();
+                renderPhotoCircle();
+                renderPhotosList();
+
+                fileInput.value = '';
+                document.getElementById('newPhotoUrlInput').value = '';
+                document.getElementById('newPhotoCaptionInput').value = '';
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    addPhoto(evt.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (urlInput) {
+                addPhoto(urlInput);
+            }
+        }
+
+        function removePhotoFromRing(index) {
+            if (state.photos.length <= 4) {
+                alert("Ring requires at least 4 photos to maintain a circle layout!");
+                return;
+            }
+            state.photos.splice(index, 1);
+            savePhotosToStorage();
+            renderPhotoCircle();
+            renderPhotosList();
+        }
+
+        function resetDefaultPhotos() {
+            state.photos = defaultPhotos;
+            localStorage.removeItem('ikaw_at_ikaw_photos');
+            renderPhotoCircle();
+            renderPhotosList();
+        }
+
+        function savePhotosToStorage() {
+            localStorage.setItem('ikaw_at_ikaw_photos', JSON.stringify(state.photos));
+        }
+    </script>
+</body>
+</html>
